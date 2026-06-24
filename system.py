@@ -1,5 +1,6 @@
 import mysql.connector
 from mysql.connector import Error
+from datetime import date, datetime
 
 class database:
     def __init__ (self):
@@ -23,8 +24,9 @@ class database:
                 self.cursor.close()
                 self.conexao.close()
   
-    def create_account(self, email: str,password: str):
-        self.cursor.execute("INSERT INTO users (email, password) VALUES (%s,%s)", (email, password))
+    def create_account(self, email: str,password: str, name: str):
+        creationDate = date.today()
+        self.cursor.execute("INSERT INTO users (email, password, name, creationDate) VALUES (%s,%s,%s,%s)", (email, password, name, creationDate))
         self.cursor.execute("SELECT * FROM users WHERE email = %s AND password = %s", (email, password))
         user = self.cursor.fetchall()
         print(user)
@@ -33,7 +35,7 @@ class database:
             print("Usuario criado!")
         else:
             print("Falha na criação do usuario.")
-
+    
     def close(self):
         if self.conexao and self.conexao.is_connected():
             self.conexao.commit()
